@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <!-- Center canvas på skærmen -->
+
+	  <!-- Kasse der styrre lable udssene -->
+   <div class="relative min-h-screen bg-gray-300">
+    <!-- RØD BAR (fast højde) -->
+    <div class="absolute top-0 left-0 w-full h-55 bg-red-600 z-50"></div>
+
+
+<div class="min-h-screen flex justify-center">
+
+    <!-- SCALE WRAPPER -->
+<div style="transform: scale(0.5); transform-origin: top center; margin-top: +230px;">
+
+      
+      <!-- DIN LABEL (original størrelse) -->
+  <div
+  class="relative shadow-2xl borde-white bg-center bg-cover bg-no-repeat"
+  style="width:2420px; height:1416px; background-color: #6e7174;" 
+>
+ <!-- style="width:2420px; height:1416px; background-image: url('/billeder/dåsefarve.avif');"  -->
+
+	  <!-- 2 hvide kasser her -->
+<div
+  class="absolute left-0 right-12 bottom-0 top-0 grid gap-12"
+  style="grid-template-columns: 1fr 420px;"
+>
+  <!-- 1: stor -->
+  <div class="bg-white"></div>
+
+  <!-- 2: smal -->
+  <div class="bg-white"></div>
+</div>
+      <!-- HØJRE KOLONNE (faste elementer du selv udfylder) -->
+      <aside
+        class="absolute top-0 right-0 h-full "
+        style="width:520px;"
+      >
+        <div class="h-full p-12 text-black flex flex-col gap-10">
+          <!-- Alkohol -->
+          <div class=" bg-white/10 p-6">
+            <div class="text-xl font-bold">ALKOHOL</div>
+            <div class="mt-2 text-6xl font-black">___.__%</div>
+            <div class="mt-2 text-lg">VOL</div>
+          </div>
+
+          <!-- Pant / mærker -->
+          <div class=" bg-white/10 p-6">
+             <img src="/billeder/pantpladsholder.png" alt="pantlogo" class="w-20 mx-auto block">
+            </ul>
+          </div>
+
+          <!-- Stregkode -->
+          <div class=" bg-white/10 p-6 mt-auto">
+			 <div class="mt-4  h-48 grid place-items-center">
+      <img src="/billeder/Stregkodepladsholder.png" alt="stregkode">
+</div>
+            <div class="mt-6 text-lg">
+              <span class="font-bold">Netto:</span> ___ cl
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!--(logo i midten + tekst) -->
+      <main
+      class="absolute top-20 left-0 h-full grid items-start justify-center pt-24 text-black"
+        style="width:1900px;"
+      >
+        <div class="text-center px-16">
+          <!-- Logo placeholder -->
+          <div class="grid place-items-center"
+               style="width:780px; height:380px;">
+			    <img src="/billeder/AA.svg" alt="ålogo" class="w-130">
+           <img src="/billeder/AABEN.svg" alt="åbenlogo">
+
+          </div>
+
+          <!-- Produktnavn -->
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>
