@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import P5Sketch from '../components/P5Sketch.astro';
 ---
 
 <Layout>
@@ -24,65 +25,40 @@ import Layout from '../layouts/Layout.astro';
 >
  <!-- style="width:2420px; height:1416px; background-image: url('/billeder/dåsefarve.avif');"  -->
 
-	  <!-- 2 hvide kasser her -->
+<!-- 2 hvide kasser her -->
 <div
-  class="absolute left-0 right-12 bottom-0 top-0 grid gap-12"
-  style="grid-template-columns: 1fr 420px;"
+  class="absolute inset-0 right-0 grid gap-0"
+  style="grid-template-columns: 1fr 520px;"
 >
-  <!-- 1: stor -->
-  <div class="bg-white"></div>
+		<!-- Chaikin Curves -->
+	<P5Sketch />
 
-  <!-- 2: smal -->
-  <div class="bg-white"></div>
-</div>
-      <!-- HØJRE KOLONNE (faste elementer du selv udfylder) -->
-      <aside
-        class="absolute top-0 right-0 h-full "
-        style="width:520px;"
-      >
-        <div class="h-full p-12 text-black flex flex-col gap-10">
-          <!-- Alkohol -->
-          <div class=" bg-white/10 p-6">
-            <div class="text-xl font-bold">ALKOHOL</div>
-            <div class="mt-2 text-6xl font-black">___.__%</div>
-            <div class="mt-2 text-lg">VOL</div>
-          </div>
+   
 
-          <!-- Pant / mærker -->
-          <div class=" bg-white/10 p-6">
-             <img src="/billeder/pantpladsholder.png" alt="pantlogo" class="w-20 mx-auto block">
-            </ul>
-          </div>
+  <!-- HØJRE: lille hvid boks -->
+ 
+    <div class="h-full w-full bg-white">
 
-          <!-- Stregkode -->
-          <div class=" bg-white/10 p-6 mt-auto">
-			 <div class="mt-4  h-48 grid place-items-center">
+      <!-- Pant / mærker -->
+       <div class=" p-6">
+             <img src="/billeder/pantpladsholder.png" alt="pantlogo" class="w-20 item-left">
+      </div>
+
+	   <!-- Stregkode -->
+	   <div class="p-6 mt-auto">
+<h1 class="text-2xl mb-3 font-bold">Sour, Refreshing, Red Berries Berliner Weisse, 4.5%, 33 CL</h1>
+			<h2 class="text-lg">Stolen Red Berries is the first member of our Stolen series, consisting of soured wheat beers. We went fruity on this one by adding all our favourite red berries: raspberry, black cherries, black currant, red currant and blackberry in the fermentor. All the fruits are 100% natural with nothing added to them. The beer is tart and refreshing with a beautiful pink foam and is a true thirst-quencher for the hot summer days.</h2>
+      <!-- Stregkode -->
+       <div class="p-6 mt-auto">
+             <div class="mt-4 h-48 grid place-items-center">
       <img src="/billeder/Stregkodepladsholder.png" alt="stregkode">
 </div>
-            <div class="mt-6 text-lg">
-              <span class="font-bold">Netto:</span> ___ cl
-            </div>
-          </div>
+        <div class="mt-6 text-lg">
+          <span class="font-bold">Netto:</span> 33 cl
         </div>
-      </aside>
-
-      <!--(logo i midten + tekst) -->
-      <main
-      class="absolute top-20 left-0 h-full grid items-start justify-center pt-24 text-black"
-        style="width:1900px;"
-      >
-        <div class="text-center px-16">
-          <!-- Logo placeholder -->
-          <div class="grid place-items-center"
-               style="width:780px; height:380px;">
-			    <img src="/billeder/AA.svg" alt="ålogo" class="w-130">
-           <img src="/billeder/AABEN.svg" alt="åbenlogo">
-
-          </div>
-
-          <!-- Produktnavn -->
-        </div>
-      </main>
+      </div>
     </div>
-  </div>
+  </aside>
+</div>
+
 </Layout>
