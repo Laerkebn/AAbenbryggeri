@@ -1,12 +1,33 @@
-   <!-- (logo i midten + tekst) -->
-      <main class="flex-1 grid place-items-center mb-90 text-black">
+---
+import labelSketch from '../sketches/labelSketch.js';
+---
+
+<section class="bg-gray h-full">
+  <div class="relative h-full">
+
+    <!-- LAG 1: p5 canvas mount (bagved) -->
+    <div id="p5-mount" class="absolute inset-0 z-0"></div>
+
+    <!-- LAG 2: logo overlay (foran) -->
+    <div class="absolute inset-0 z-20 pointer-events-none grid place-items-center">
+      <main class="text-black">
         <div class="text-center">
-          <div class="grid place-items-center" style="width:780px; height:380px;">
-            <img src="/billeder/AA.svg" alt="ålogo" class=" h-150">
-            <img src="/billeder/AABEN.svg" alt="åbenlogo">
+          <div class="grid place-items-center" style="width:780px; height:380px; margin-bottom: 300px;">
+            <img src="/billeder/AA.svg" alt="ålogo" class="h-150" />
+            <img src="/billeder/AABEN.svg" alt="åbenlogo" />
           </div>
         </div>
       </main>
-
     </div>
-  </section>
+
+  </div>
+</section>
+
+<!-- Start p5 sketch (kræver at p5 er installeret: npm install p5) -->
+<script>
+  import p5 from 'p5';
+  import labelSketch from '../sketches/labelSketch.js';
+
+  // Vent til DOM er klar, så #p5-mount eksisterer
+  new p5(labelSketch);
+</script>
