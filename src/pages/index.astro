@@ -4,61 +4,77 @@ import P5Sketch from '../components/P5Sketch.astro';
 ---
 
 <Layout>
-  <!-- Center canvas på skærmen -->
+    <!-- øvre BAR (fast højde) -->
+    <div class="absolute top-0 left-0 w-full h-55 bg-[#46484a] z-50">
 
-	  <!-- Kasse der styrre lable udssene -->
-   <div class="relative min-h-screen bg-gray-300">
-    <!-- RØD BAR (fast højde) -->
-    <div class="absolute top-0 left-0 w-full h-55 bg-red-600 z-50"></div>
+ <!-- Kontrol-panel med Shoelace sliders -->
 
+            <sl-range 
+                id="ctrl-kurver" 
+                label="ABV (%)" 
+                min="0.0" max="16" value="0.0">
+            </sl-range>
 
-<div class="min-h-screen flex justify-center">
+            <sl-range 
+                id="ctrl-snit" 
+                label="IBU (bitterhed)" 
+                min="0" max="100" value="0">
+            </sl-range>
 
-    <!-- SCALE WRAPPER -->
-<div style="transform: scale(0.5); transform-origin: top center; margin-top: +230px;">
-
-      
-      <!-- DIN LABEL (original størrelse) -->
-  <div
-  class="relative shadow-2xl borde-white bg-center bg-cover bg-no-repeat"
-  style="width:2420px; height:1416px; background-color: #6e7174;" 
->
- <!-- style="width:2420px; height:1416px; background-image: url('/billeder/dåsefarve.avif');"  -->
-
-<!-- 2 hvide kasser her -->
-<div
-  class="absolute inset-0 right-0 grid gap-0"
-  style="grid-template-columns: 1fr 520px;"
->
-		<!-- Chaikin Curves -->
-	<P5Sketch />
-
-   
-
-  <!-- HØJRE: lille hvid boks -->
- 
-    <div class="h-full w-full bg-white">
-
-      <!-- Pant / mærker -->
-       <div class=" p-6">
-             <img src="/billeder/pantpladsholder.png" alt="pantlogo" class="w-20 item-left">
-      </div>
-
-	   <!-- Stregkode -->
-	   <div class="p-6 mt-auto">
-<h1 class="text-2xl mb-3 font-bold">Sour, Refreshing, Red Berries Berliner Weisse, 4.5%, 33 CL</h1>
-			<h2 class="text-lg">Stolen Red Berries is the first member of our Stolen series, consisting of soured wheat beers. We went fruity on this one by adding all our favourite red berries: raspberry, black cherries, black currant, red currant and blackberry in the fermentor. All the fruits are 100% natural with nothing added to them. The beer is tart and refreshing with a beautiful pink foam and is a true thirst-quencher for the hot summer days.</h2>
-      <!-- Stregkode -->
-       <div class="p-6 mt-auto">
-             <div class="mt-4 h-48 grid place-items-center">
-      <img src="/billeder/Stregkodepladsholder.png" alt="stregkode">
-</div>
-        <div class="mt-6 text-lg">
-          <span class="font-bold">Netto:</span> 33 cl
+            <sl-range 
+                id="ctrl-glatninger" 
+                label="EBC (farve)" 
+                min="1" max="150" value="0">
+            </sl-range>
         </div>
-      </div>
-    </div>
-  </aside>
-</div>
 
+        <!-- Alt indhold starter under baren -->
+    <div class="pt-56"></div>
+
+    
+
+ <!-- Denne kasse holder både svg og p5sketch oven i hinanden -->
+        <div class="relative">
+
+	 
+            <!-- LAG 1: p5sketch nederst -->
+         <div class="absolute inset-0 z-0">
+                <P5Sketch />
+            </div>
+
+            <!-- LAG 2: label.svg øverst -->
+            <img src="/billeder/lable.svg" alt="labellogo" class="relative z-10 pt-2 w-full" />
+
+        </div>
+    </div>
+
+       <!-- Stil på sliders -->
+<style>
+    sl-range {
+        padding: 10px 20px;
+        border-radius: 8px;
+
+        /* Farve på selve slideren */
+        --sl-color-primary-600: #232323;
+
+         /* Hover og slide farve */
+        --sl-color-primary-500: #888888;
+
+        /* Farve på label-teksten */
+        --sl-input-label-color: #f5f5f5;
+
+        /* Størrelse på label-teksten */
+        --sl-input-label-font-size-medium: 14px;   
+
+       
+      
+    }
+
+
+    /* Bredde på hver slider */
+    sl-range::part(base) {
+        width: 200px;
+    }
+    
+</style>
 </Layout>
