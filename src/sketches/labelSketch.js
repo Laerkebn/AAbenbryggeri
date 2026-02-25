@@ -10,6 +10,7 @@ export default function labelSketch(p) {
   const antal_glatninger = 6; // Hvor mange gange vi glatter kurven.
 
   let curves = [];
+  let baggrundFarve = "#6e7174";
 
   // ===========================================================================
   // FUNKTION: chaikin_cut(a, b, ratio)
@@ -124,12 +125,13 @@ export default function labelSketch(p) {
 
     canvas.parent("p5-mount");
     p.randomSeed(666);
+    p.colorMode(p.HSB, 360, 100, 100, 100);
     generateCurves();
     p.noLoop();
   };
 
   p.draw = function () {
-    p.background("#6e7174"); //Denne farve kan ændres (baggrundsfarven)
+    p.background(baggrundFarve);
     p.noFill();
     p.strokeCap(p.ROUND);
     p.strokeJoin(p.ROUND);
@@ -142,7 +144,14 @@ export default function labelSketch(p) {
       const lerpT = ci / (curves.length - 1);
       const alpha = p.map(lerpT, 0, 1, 30, 90); //Disse tal kan ændres (gennemsigtigheden)
       const weight = p.map(lerpT, 0, 1, 1, 20); //Disse tal kan ændres (linjetykkelsen)
-      p.stroke(255, 255, 255, alpha); //Disse tal kan ændres (linjefarven, i RGBA-format)
+
+      let stregfarve = p.color(
+        (p.hue(baggrundFarve) + 180) % 360,
+        p.saturation(baggrundFarve),
+        p.brightness(baggrundFarve),
+        alpha,
+      );
+      p.stroke(stregfarve);
       p.strokeWeight(weight);
 
       p.beginShape();
@@ -168,6 +177,16 @@ export default function labelSketch(p) {
     snitprocent = p.map(ibu, 0, 100, 0.25, 0.05);
     p.randomSeed(666);
     generateCurves();
+    p.redraw();
+  };
+
+  p.opdaterBaggrund = function (hex) {
+    baggrundFarve = hex;
+    p.redraw();
+  };
+
+  p.opdaterHue = function (hue) {
+    baggrundFarve = p.color(hue, 50, 90);
     p.redraw();
   };
 

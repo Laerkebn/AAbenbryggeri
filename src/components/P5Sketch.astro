@@ -19,4 +19,9 @@ import labelSketch from '../sketches/labelSketch.js';
   abvSlider.addEventListener('sl-change', (e) => {
     mySketch.opdaterKurver(e.target.value);
   });
+
+ const hueSlider = document.getElementById('ctrl-hue');
+  hueSlider.addEventListener('sl-change', (e) => {
+    mySketch.opdaterHue(e.target.value);
+  });
 </script>

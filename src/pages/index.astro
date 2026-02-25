@@ -11,27 +11,25 @@ import P5Sketch from '../components/P5Sketch.astro';
 
             <sl-range 
                 id="ctrl-kurver" 
-                label="ABV (%)" 
+                label="ABV (%):" 
                 min="0.0" max="16" value="0.0">
             </sl-range>
 
             <sl-range 
                 id="ctrl-snit" 
-                label="IBU (bitterhed)" 
+                label="IBU (bitterhed):" 
                 min="0" max="100" value="0">
             </sl-range>
 
             <sl-range 
-                id="ctrl-glatninger" 
-                label="EBC (farve)" 
-                min="1" max="150" value="0">
+                id="ctrl-hue" 
+                label="Hue:" 
+                min="0" max="360" value="0">
             </sl-range>
         </div>
 
         <!-- Alt indhold starter under baren -->
     <div class="pt-56"></div>
-
-    
 
  <!-- Denne kasse holder både svg og p5sketch oven i hinanden -->
         <div class="relative">
@@ -65,11 +63,14 @@ import P5Sketch from '../components/P5Sketch.astro';
 
         /* Størrelse på label-teksten */
         --sl-input-label-font-size-medium: 14px;   
+       }
 
-       
-      
+    sl-color-picker {
+        padding: 10px 20px;
     }
-
+    sl-range::part(base) {
+        width: 200px;
+    }
 
     /* Bredde på hver slider */
     sl-range::part(base) {
