@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@font-face {
+    font-family: SuisseIntl-Regular;
+    src: url("/public/font/SuisseIntl-Regular.otf")
+}
+
+body {
+    font-family: SuisseIntl-Regular;
+}

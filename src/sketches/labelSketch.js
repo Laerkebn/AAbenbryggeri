@@ -131,7 +131,9 @@ export default function labelSketch(p) {
   };
 
   p.draw = function () {
-    p.background(baggrundFarve);
+     const bgC = p.color(baggrundFarve);
+    p.background(p.hue(bgC), p.saturation(bgC), p.brightness(bgC), 100);
+
     p.noFill();
     p.strokeCap(p.ROUND);
     p.strokeJoin(p.ROUND);
@@ -185,13 +187,32 @@ export default function labelSketch(p) {
     p.redraw();
   };
 
-  p.opdaterHue = function (hue) {
-    baggrundFarve = p.color(hue, 50, 90);
+  p.opdaterHue = function (sliderVal) {
+    // Farverække sorteret fra lysest til mørkest
+    const palette = [
+      '#fefdf3','#efdced','#f5f5c8','#efb7fc','#bae0f0',
+      '#d9afb9','#f0f075','#b3b3aa','#cae771','#bea67d',
+      '#7cbf99','#d95856','#8e77b8','#3ea0c9','#936a5e',
+      '#c92443','#42659d','#586f77','#437357','#87472d',
+      '#524073','#811a2d','#6e2a67','#362d25'
+    ];
+
+    // Slider 0-150 mapper til palette index
+    const t = sliderVal / 150;
+    const scaledT = t * (palette.length - 1);
+    const indexA = Math.floor(scaledT);
+    const indexB = Math.min(indexA + 1, palette.length - 1);
+    const lerpAmt = scaledT - indexA;
+
+    // Lerp mellem de to nærmeste farver
+    const ca = p.color(palette[indexA]);
+    const cb = p.color(palette[indexB]);
+    baggrundFarve = p.lerpColor(ca, cb, lerpAmt);
     p.redraw();
   };
 
   p.opdaterKurver = function (abv) {
-    antal_kurver = p.map(abv, 0, 16, 7, 30);
+   antal_kurver = Math.round(p.map(abv, 0, 16, 7, 30));
     p.randomSeed(666);
     generateCurves();
     p.redraw();

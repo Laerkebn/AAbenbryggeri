@@ -1,81 +1,181 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import P5Sketch from '../components/P5Sketch.astro';
+import Label from '../components/Label.astro';
 ---
 
 <Layout>
     <!-- øvre BAR (fast højde) -->
     <div class="absolute top-0 left-0 w-full h-55 bg-[#46484a] z-50">
 
- <!-- Kontrol-panel med Shoelace sliders -->
+        <!-- Kontrol-panel: venstre tekstfelter / højre sliders -->
+        <div class="grid grid-cols-2 gap-x-6 px-4 pt-2">
 
-            <sl-range 
-                id="ctrl-kurver" 
-                label="ABV (%):" 
-                min="0.0" max="16" value="0.0">
-            </sl-range>
+            <!-- VENSTRE: tekstfelter -->
+            <div class="flex flex-col gap-y-2">
+                <div class="flex flex-col">
+                    <label class="text-[#f5f5f5] text-xs mb-1">Ølnavn:</label>
+                    <input
+                        id="oel-navn-input"
+                        type="text"
+                        placeholder="Cloud Gazing..."
+                        class="bg-transparent border border-white/30 text-white text-sm outline-none p-1 w-full rounded"
+                    />
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-[#f5f5f5] text-xs mb-1">Beskrivelse:</label>
+                    <textarea
+                        id="beskrivelse-input"
+                        placeholder="Cloud Gazing is a modern West Coast IPA..."
+                        rows="3"
+                        class="bg-transparent border border-white/30 text-white text-sm outline-none p-1 w-full resize-none rounded"
+                    ></textarea>
+                </div>
 
-            <sl-range 
-                id="ctrl-snit" 
-                label="IBU (bitterhed):" 
-                min="0" max="100" value="0">
-            </sl-range>
-
-            <sl-range 
-                id="ctrl-hue" 
-                label="Hue:" 
-                min="0" max="360" value="0">
-            </sl-range>
-        </div>
-
-        <!-- Alt indhold starter under baren -->
-    <div class="pt-56"></div>
-
- <!-- Denne kasse holder både svg og p5sketch oven i hinanden -->
-        <div class="relative">
-
-	 
-            <!-- LAG 1: p5sketch nederst -->
-         <div class="absolute inset-0 z-0">
-                <P5Sketch />
+                <div class="flex flex-col">
+                    <label class="text-[#f5f5f5] text-xs mb-1">Ølstil:</label>
+                    <select
+                        id="stil-select"
+                        class="bg-[#46484a] border border-white/30 text-white text-sm outline-none p-1 w-full rounded"
+                    >
+                        <option value="Ale">Ale</option>
+                        <option value="IPA" selected>IPA</option>
+                        <option value="Lager">Lager</option>
+                        <option value="Sour">Sour</option>
+                        <option value="Special">Special</option>
+                        <option value="Stout">Stout</option>
+                        <option value="Wheat">Wheat</option>
+                        <option value="Special">Special</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- LAG 2: label.svg øverst -->
-            <img src="/billeder/lable.svg" alt="labellogo" class="relative z-10 pt-2 w-full" />
+            <!-- HØJRE: sliders -->
+            <div class="flex flex-col">
+                <sl-range 
+                    id="ctrl-kurver" 
+                    label="ABV (%):" 
+                    min="0.0" max="16" step="0.1" value="0.0">
+                </sl-range>
+
+                <sl-range 
+                    id="ctrl-snit" 
+                    label="IBU (bitterhed):" 
+                    min="0" max="100" value="0">
+                </sl-range>
+
+                <sl-range 
+                    id="ctrl-hue" 
+                    label="Hue:" 
+                    min="0" max="120" value="0">
+                </sl-range>
+            </div>
 
         </div>
     </div>
 
-       <!-- Stil på sliders -->
+    <!-- Alt indhold starter under baren -->
+    <div class="pt-56"></div>
+
+    <!-- Denne kasse holder både svg og p5sketch oven i hinanden -->
+    <div class="relative">
+
+        <!-- LAG 1: p5sketch nederst -->
+        <div class="absolute inset-0 z-0">
+            <P5Sketch />
+        </div>
+
+        <!-- LAG 2: Label SVG (inline, så vi kan opdatere tekst med JS) -->
+        <div class="relative z-10 pt-2 w-full" style="aspect-ratio: 2420/1416;">
+            <Label />
+        </div>
+
+    </div>
+</Layout>
+
+<!-- JavaScript: opdater SVG-teksten når man skriver i inputfeltet -->
+<script>
+    const input = document.getElementById('oel-navn-input') as HTMLInputElement;
+
+    input.addEventListener('input', () => {
+        const svgTekst = document.getElementById('svg-oel-navn');
+        if (svgTekst) {
+            svgTekst.querySelector('tspan')!.textContent = input.value || 'Cloud Gazing';
+        }
+    });
+
+    // Beskrivelse textarea opdaterer SVG-teksten
+    const beskrivelseInput = document.getElementById('beskrivelse-input') as HTMLTextAreaElement;
+    beskrivelseInput.addEventListener('input', () => {
+        const svgBeskrivelse = document.getElementById('svg-beskrivelse');
+        if (!svgBeskrivelse) return;
+
+        const linjer = beskrivelseInput.value
+            ? beskrivelseInput.value.match(/.{1,38}/g) || []
+            : [
+                'Cloud Gazing is a modern West Coast IPA',
+                'boasting a blend of hops that express',
+                'citrus fruits, evergreen forest, and an',
+                'approachable bitterness'
+              ];
+
+        // Ryd eksisterende tspans og opbyg nye
+        svgBeskrivelse.innerHTML = linjer
+            .map((linje, i) => `<tspan x="0" dy="${i === 0 ? 0 : 8}">${linje}</tspan>`)
+            .join('');
+    });
+
+    // Sekundær farve til Å-symbolet per ølstil
+    const stilAaFarve: Record<string, string> = {
+        'Ale':      '#2B2303',
+        'IPA':      '#2B2303',
+        'Lager':          '#311905',
+        'Sour':        '#E9D5BF',
+        'Stout': '#FFAAAA',
+        'Wheat':    '#E9D5BF',
+         'Special':    '#E9D5BF',
+    };
+
+    function opdaterStil(stil: string) {
+        // Opdater Å-farve direkte i SVG
+        const aaFarve = stilAaFarve[stil] || '#000000';
+        document.getElementById('svg-aa-højre')?.setAttribute('fill', aaFarve);
+        document.getElementById('svg-aa-venstre')?.setAttribute('fill', aaFarve);
+    }
+
+    const stilSelect = document.getElementById('stil-select') as HTMLSelectElement;
+    stilSelect.addEventListener('change', () => opdaterStil(stilSelect.value));
+    
+    // Sæt IPA som standard ved load
+    opdaterStil('IPA');
+
+    // ABV slider opdaterer alkoholprocenten i SVG
+    const abvSlider = document.getElementById('ctrl-kurver');
+    abvSlider?.addEventListener('sl-input', (e: any) => {
+        const val = parseFloat(e.target.value).toFixed(1);
+        const alcTspan = document.getElementById('svg-alc-tspan');
+        if (alcTspan) {
+            alcTspan.textContent = `Alc. ${val}% vol.`;
+        }
+    });
+</script>
+
+<!-- Stil på sliders -->
 <style>
     sl-range {
         padding: 10px 20px;
         border-radius: 8px;
-
-        /* Farve på selve slideren */
         --sl-color-primary-600: #232323;
-
-         /* Hover og slide farve */
         --sl-color-primary-500: #888888;
-
-        /* Farve på label-teksten */
         --sl-input-label-color: #f5f5f5;
-
-        /* Størrelse på label-teksten */
         --sl-input-label-font-size-medium: 14px;   
-       }
+    }
 
     sl-color-picker {
         padding: 10px 20px;
     }
-    sl-range::part(base) {
-        width: 200px;
-    }
 
-    /* Bredde på hver slider */
     sl-range::part(base) {
-        width: 200px;
+        width: 100%;
     }
-    
 </style>
-</Layout>
