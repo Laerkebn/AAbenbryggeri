@@ -8,6 +8,7 @@ export default function labelSketch(p) {
   let antal_kurver = 7; // Antal kurver i mønsteret.
   let snitprocent = 0.49; // Hvor langt inde på kanten vi skærer
   const antal_glatninger = 6; // Hvor mange gange vi glatter kurven.
+  let outline = null;
 
   let curves = [];
   let baggrundFarve = "#6e7174";
@@ -153,8 +154,19 @@ export default function labelSketch(p) {
         p.brightness(baggrundFarve),
         alpha,
       );
-      p.stroke(stregfarve);
-      p.strokeWeight(weight);
+     // 1) Under-stroke (outline)
+p.stroke(0, 0, 100, alpha * 0.6);      
+p.strokeWeight(weight + 3);            
+p.beginShape();
+for (const punkt of points) p.vertex(punkt.x, punkt.y);
+p.endShape();
+
+// 2) Over-stroke (din rigtige streg)
+p.stroke(stregfarve);
+p.strokeWeight(weight);
+p.beginShape();
+for (const punkt of points) p.vertex(punkt.x, punkt.y);
+p.endShape();
 
       p.beginShape();
       for (const punkt of points) {
@@ -189,13 +201,32 @@ export default function labelSketch(p) {
 
   p.opdaterHue = function (sliderVal) {
     // Farverække sorteret fra lysest til mørkest
-    const palette = [
-      '#fefdf3','#efdced','#f5f5c8','#efb7fc','#bae0f0',
-      '#d9afb9','#f0f075','#b3b3aa','#cae771','#bea67d',
-      '#7cbf99','#d95856','#8e77b8','#3ea0c9','#936a5e',
-      '#c92443','#42659d','#586f77','#437357','#87472d',
-      '#524073','#811a2d','#6e2a67','#362d25'
-    ];
+   const palette = [
+  '#fefdf3', //1
+  '#f5c8f4', //2
+  '#5fd6dc', //3
+  '#7fbad6', //4
+  '#edd1ea', //5
+  '#b5b281', //6
+  '#e69292', //7
+  '#c48e9b', //8
+  '#7dbeb6', //9
+  '#7cbf99', //10
+  '#3ea0c9', //11 
+  '#d97a4e', //12 
+  '#76935e', //13
+  '#d95856', //14
+  '#8e77b8', //15
+  '#42659d', //16
+  '#437357', //17
+  '#87472d', //18
+  '#586f77', //19
+  '#c92443', //20
+  '#6e2a67', //21
+  '#524073', //22
+  '#811a2d', //23
+  '#362d25' //24
+];
 
     // Slider 0-150 mapper til palette index
     const t = sliderVal / 150;

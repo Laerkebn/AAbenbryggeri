@@ -42,7 +42,6 @@ import Label from '../components/Label.astro';
                         <option value="IPA" selected>IPA</option>
                         <option value="Lager">Lager</option>
                         <option value="Sour">Sour</option>
-                        <option value="Special">Special</option>
                         <option value="Stout">Stout</option>
                         <option value="Wheat">Wheat</option>
                         <option value="Special">Special</option>
@@ -67,7 +66,7 @@ import Label from '../components/Label.astro';
                 <sl-range 
                     id="ctrl-hue" 
                     label="Hue:" 
-                    min="0" max="120" value="0">
+                    min="0" max="150" value="0">
                 </sl-range>
             </div>
 
@@ -127,13 +126,13 @@ import Label from '../components/Label.astro';
 
     // Sekundær farve til Å-symbolet per ølstil
     const stilAaFarve: Record<string, string> = {
-        'Ale':      '#2B2303',
-        'IPA':      '#2B2303',
-        'Lager':          '#311905',
-        'Sour':        '#E9D5BF',
-        'Stout': '#FFAAAA',
-        'Wheat':    '#E9D5BF',
-         'Special':    '#E9D5BF',
+        'Ale':      '#87472d',
+        'IPA':      '#524073',
+        'Lager':          '#76935e',
+        'Sour':        '#811a2d',
+        'Stout': '#7dbeb6',
+        'Wheat':    '#bea67d',
+         'Special':    '#fefdf3',
     };
 
     function opdaterStil(stil: string) {
