@@ -6,8 +6,9 @@ import Label from '../components/Label.astro';
 
 <Layout>
     <!-- øvre BAR (fast højde) -->
-    <div class="absolute top-0 left-0 w-full h-55 bg-[#46484a] z-50">
+    <div class="absolute top-0 left-0 w-full h-60 bg-[#46484a] z-50">
 
+        
         <!-- Kontrol-panel: venstre tekstfelter / højre sliders -->
         <div class="grid grid-cols-2 gap-x-6 px-4 pt-2">
 
@@ -38,13 +39,14 @@ import Label from '../components/Label.astro';
                         id="stil-select"
                         class="bg-[#46484a] border border-white/30 text-white text-sm outline-none p-1 w-full rounded"
                     >
-                        <option value="Ale">Ale</option>
-                        <option value="IPA" selected>IPA</option>
-                        <option value="Lager">Lager</option>
-                        <option value="Sour">Sour</option>
-                        <option value="Stout">Stout</option>
-                        <option value="Wheat">Wheat</option>
-                        <option value="Special">Special</option>
+                  
+                        <option selected value="#87472d">Ale</option>
+                        <option value="#524073" >IPA</option>
+                        <option value="#76935e">Lager</option>
+                        <option value="#811a2d">Sour</option>
+                        <option value="#7dbeb6">Stout</option>
+                        <option value="#bea67d">Wheat</option>
+                        <option value="#fefdf3">Special</option>
                     </select>
                 </div>
             </div>
@@ -54,7 +56,7 @@ import Label from '../components/Label.astro';
                 <sl-range 
                     id="ctrl-kurver" 
                     label="ABV (%):" 
-                    min="0.0" max="16" step="0.1" value="0.0">
+                    min="0.0" max="16" step="0.1" value="0">
                 </sl-range>
 
                 <sl-range 
@@ -74,7 +76,7 @@ import Label from '../components/Label.astro';
     </div>
 
     <!-- Alt indhold starter under baren -->
-    <div class="pt-56"></div>
+    <div class="pt-65"></div>
 
     <!-- Denne kasse holder både svg og p5sketch oven i hinanden -->
     <div class="relative">
@@ -88,8 +90,31 @@ import Label from '../components/Label.astro';
         <div class="relative z-10 pt-2 w-full" style="aspect-ratio: 2420/1416;">
             <Label />
         </div>
-
     </div>
+    <div class="w-full flex items-center gap-2 px-4 py-3">
+  <span class="text-sm text-black/80">Gem label som</span>
+
+  <input
+    id="export-name"
+    type="text"
+    value="label-1"
+    class="bg-transparent border border-black/30 text-black text-sm outline-none p-2 rounded w-56"
+  />
+
+  <button
+    id="btn-export-svg"
+    class="px-3 py-2 rounded bg-black/10 hover:bg-black/20 text-black text-sm"
+  >
+    SVG
+  </button>
+
+  <button
+    id="btn-export-png"
+    class="px-3 py-2 rounded bg-black/10 hover:bg-black/20 text-black text-sm"
+  >
+    PNG
+  </button>
+</div>
 </Layout>
 
 <!-- JavaScript: opdater SVG-teksten når man skriver i inputfeltet -->
@@ -124,29 +149,21 @@ import Label from '../components/Label.astro';
             .join('');
     });
 
-    // Sekundær farve til Å-symbolet per ølstil
-    const stilAaFarve: Record<string, string> = {
-        'Ale':      '#87472d',
-        'IPA':      '#524073',
-        'Lager':          '#76935e',
-        'Sour':        '#811a2d',
-        'Stout': '#7dbeb6',
-        'Wheat':    '#bea67d',
-         'Special':    '#fefdf3',
-    };
 
     function opdaterStil(stil: string) {
         // Opdater Å-farve direkte i SVG
-        const aaFarve = stilAaFarve[stil] || '#000000';
+        // const aaFarve = stilAaFarve[stil] || '#000000';
+        const aaFarve = document.getElementById('stil-select')?.value;
         document.getElementById('svg-aa-højre')?.setAttribute('fill', aaFarve);
         document.getElementById('svg-aa-venstre')?.setAttribute('fill', aaFarve);
+        document.getElementById('stortåben')?.setAttribute('fill', aaFarve);
     }
 
     const stilSelect = document.getElementById('stil-select') as HTMLSelectElement;
     stilSelect.addEventListener('change', () => opdaterStil(stilSelect.value));
     
-    // Sæt IPA som standard ved load
-    opdaterStil('IPA');
+    // Sæt INTET som standard ved load
+    opdaterStil('VÆLG');
 
     // ABV slider opdaterer alkoholprocenten i SVG
     const abvSlider = document.getElementById('ctrl-kurver');
@@ -156,7 +173,38 @@ import Label from '../components/Label.astro';
         if (alcTspan) {
             alcTspan.textContent = `Alc. ${val}% vol.`;
         }
+
+        
     });
+
+// Skift mellem hvid og sort på infortekst afhængigt af hue sliderens værdi
+const hueSlider = document.getElementById('ctrl-hue');
+hueSlider?.addEventListener('sl-change', (e: any) => {
+    const val = parseFloat(e.target.value);
+    const tekstFarve = val > 88 ? '#ffffff' : '#000000';
+
+    // Tekst i disse grupper skal skifte farve
+    ['Ingredienser', 'Beskrivelse', 'Holdbarhed'].forEach(id => {
+        document.querySelectorAll(`#${id} text`).forEach(el => {
+            el.setAttribute('fill', tekstFarve);
+        });
+    });
+
+    // Det lille ÅBEN-logo (paths + tekst i Producent_logo)
+    document.querySelectorAll('#Producent_logo text, #Producent_logo path').forEach(el => {
+        el.setAttribute('fill', tekstFarve);
+
+//Få e med
+        document.querySelectorAll('#Producent_logo text, #Producent_logo path, #Producent_logo polygon').forEach(el => {
+    el.setAttribute('fill', tekstFarve);
+});
+
+document.querySelectorAll('#linjer path, #linjer polygon, #linjer rect').forEach(el => {
+    el.setAttribute('fill', tekstFarve);
+});
+    });
+});
+    
 </script>
 
 <!-- Stil på sliders -->
@@ -177,4 +225,6 @@ import Label from '../components/Label.astro';
     sl-range::part(base) {
         width: 100%;
     }
+
+    
 </style>

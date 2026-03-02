@@ -9,6 +9,7 @@ import labelSketch from '../sketches/labelSketch.js';
 
   const mountEl = document.getElementById('p5-mount');
   const mySketch = new p5(labelSketch, mountEl);
+  
 
   const ibuSlider = document.getElementById('ctrl-snit');
   ibuSlider.addEventListener('sl-change', (e) => {
@@ -24,4 +25,6 @@ import labelSketch from '../sketches/labelSketch.js';
   hueSlider.addEventListener('sl-change', (e) => {
     mySketch.opdaterHue(e.target.value);
   });
+
+  
 </script>

@@ -132,7 +132,7 @@ export default function labelSketch(p) {
   };
 
   p.draw = function () {
-     const bgC = p.color(baggrundFarve);
+    const bgC = p.color(baggrundFarve);
     p.background(p.hue(bgC), p.saturation(bgC), p.brightness(bgC), 100);
 
     p.noFill();
@@ -145,36 +145,59 @@ export default function labelSketch(p) {
       if (points.length < 2) continue;
 
       const lerpT = ci / (curves.length - 1);
-      const alpha = p.map(lerpT, 0, 1, 30, 90); //Disse tal kan ændres (gennemsigtigheden)
-      const weight = p.map(lerpT, 0, 1, 1, 20); //Disse tal kan ændres (linjetykkelsen)
+      const alpha = p.map(lerpT, 0, 1, 40, 90); //Disse tal kan ændres (gennemsigtigheden)
+      const weight = p.map(lerpT, 0, 1, 5, 20); //Disse tal kan ændres (linjetykkelsen)
 
+      /*// 1) Under-stroke (outline)
+      let kantfarve = p.color(p.select("#stil-select").value());
+      kantfarve.setAlpha(alpha );
+      p.stroke(kantfarve);
+      p.strokeWeight(weight + 5);
+      p.beginShape();
+      for (const punkt of points) p.vertex(punkt.x, punkt.y);
+      p.endShape();
+
+      // 2) Over-stroke (din rigtige streg)
       let stregfarve = p.color(
         (p.hue(baggrundFarve) + 180) % 360,
         p.saturation(baggrundFarve),
         p.brightness(baggrundFarve),
         alpha,
       );
-     // 1) Under-stroke (outline)
-p.stroke(0, 0, 100, alpha * 0.6);      
-p.strokeWeight(weight + 3);            
+      p.stroke(stregfarve);
+      p.strokeWeight(weight);
+      p.beginShape();
+      for (const punkt of points) p.vertex(punkt.x, punkt.y);
+      p.endShape();
+    }
+   
+  };
+   */
+const ringThickness = 10; 
+
+// 1) Outline (kun lidt tykkere end overstrok)
+let kantfarve = p.color(p.select("#stil-select").value());
+kantfarve.setAlpha(alpha * 2);
+p.stroke(kantfarve);
+p.strokeWeight(weight + ringThickness);
 p.beginShape();
 for (const punkt of points) p.vertex(punkt.x, punkt.y);
 p.endShape();
 
-// 2) Over-stroke (din rigtige streg)
+// 3) Over-stroke (din rigtige streg)
+let stregfarve = p.color(
+  (p.hue(bgC) + 180) % 360,
+  p.saturation(bgC),
+  p.brightness(bgC),
+  alpha
+);
 p.stroke(stregfarve);
 p.strokeWeight(weight);
 p.beginShape();
 for (const punkt of points) p.vertex(punkt.x, punkt.y);
 p.endShape();
-
-      p.beginShape();
-      for (const punkt of points) {
-        p.vertex(punkt.x, punkt.y);
-      }
-      p.endShape();
-    }
-  };
+    };
+  }
   // ===========================================================================
   // p.windowResized() — kører automatisk hvis browservinduet ændrer størrelse
   // ===========================================================================
@@ -201,32 +224,32 @@ p.endShape();
 
   p.opdaterHue = function (sliderVal) {
     // Farverække sorteret fra lysest til mørkest
-   const palette = [
-  '#fefdf3', //1
-  '#f5c8f4', //2
-  '#5fd6dc', //3
-  '#7fbad6', //4
-  '#edd1ea', //5
-  '#b5b281', //6
-  '#e69292', //7
-  '#c48e9b', //8
-  '#7dbeb6', //9
-  '#7cbf99', //10
-  '#3ea0c9', //11 
-  '#d97a4e', //12 
-  '#76935e', //13
-  '#d95856', //14
-  '#8e77b8', //15
-  '#42659d', //16
-  '#437357', //17
-  '#87472d', //18
-  '#586f77', //19
-  '#c92443', //20
-  '#6e2a67', //21
-  '#524073', //22
-  '#811a2d', //23
-  '#362d25' //24
-];
+    const palette = [
+      "#fefdf3", //1
+      "#f5c8f4", //2
+      "#5fd6dc", //3
+      "#7fbad6", //4
+      "#edd1ea", //5
+      "#b5b281", //6
+      "#e69292", //7
+      "#c48e9b", //8
+      "#7dbeb6", //9
+      "#7cbf99", //10
+      "#3ea0c9", //11
+      "#d97a4e", //12
+      "#76935e", //13
+      "#d95856", //14
+      "#8e77b8", //15
+      "#42659d", //16
+      "#437357", //17
+      "#87472d", //18
+      "#586f77", //19
+      "#c92443", //20
+      "#6e2a67", //21
+      "#524073", //22
+      "#811a2d", //23
+      "#362d25", //24
+    ];
 
     // Slider 0-150 mapper til palette index
     const t = sliderVal / 150;
@@ -243,7 +266,7 @@ p.endShape();
   };
 
   p.opdaterKurver = function (abv) {
-   antal_kurver = Math.round(p.map(abv, 0, 16, 7, 30));
+    antal_kurver = Math.round(p.map(abv, 0, 16, 5, 20));
     p.randomSeed(666);
     generateCurves();
     p.redraw();
