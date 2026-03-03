@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import P5Sketch from '../components/P5Sketch.astro';
 import Label from '../components/Label.astro';
+
 ---
 
 <Layout>
@@ -91,8 +92,11 @@ import Label from '../components/Label.astro';
             <Label />
         </div>
     </div>
+
+
+        <!-- Gem lable -->
     <div class="w-full flex items-center gap-2 px-4 py-3">
-  <span class="text-sm text-black/80">Gem label som</span>
+  <span class="text-sm wrap text-black/80">Gem label som:</span>
 
   <input
     id="export-name"
@@ -100,22 +104,32 @@ import Label from '../components/Label.astro';
     value="label-1"
     class="bg-transparent border border-black/30 text-black text-sm outline-none p-2 rounded w-56"
   />
-
-  <button
-    id="btn-export-svg"
-    class="px-3 py-2 rounded bg-black/10 hover:bg-black/20 text-black text-sm"
-  >
-    SVG
-  </button>
-
   <button
     id="btn-export-png"
     class="px-3 py-2 rounded bg-black/10 hover:bg-black/20 text-black text-sm"
   >
-    PNG
+    Gem PNG
   </button>
 </div>
 </Layout>
+
+<!-- eksport png -->
+<script>
+    const input = document.getElementById('oel-navn-input') as HTMLInputElement;
+    // ... al din eksisterende kode ...
+
+    // PNG eksport — tilføj i bunden her
+    const btnPng = document.getElementById("btn-export-png");
+    const exportName = document.getElementById("export-name") as HTMLInputElement;
+
+    btnPng?.addEventListener("click", () => {
+        const s = (window as any).__labelSketch;
+        if (!s?.downloadPNG) return console.warn("downloadPNG ikke fundet");
+        const filename = (exportName?.value || "label").trim().replace(/[^\w\-]+/g, "_");
+        s.downloadPNG(filename);
+    });
+</script>
+
 
 <!-- JavaScript: opdater SVG-teksten når man skriver i inputfeltet -->
 <script>
@@ -207,7 +221,7 @@ document.querySelectorAll('#linjer path, #linjer polygon, #linjer rect').forEach
     
 </script>
 
-<!-- Stil på sliders -->
+
 <style>
     sl-range {
         padding: 10px 20px;

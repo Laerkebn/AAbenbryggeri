@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: SuisseIntl-Regular;
-    src: url("/public/font/SuisseIntl-Regular.otf")
+    src: url("/font/SuisseIntl-Regular.otf");
 }
 
 body {

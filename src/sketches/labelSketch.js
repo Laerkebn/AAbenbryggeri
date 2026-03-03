@@ -173,31 +173,31 @@ export default function labelSketch(p) {
    
   };
    */
-const ringThickness = 10; 
+      const ringThickness = 10;
 
-// 1) Outline (kun lidt tykkere end overstrok)
-let kantfarve = p.color(p.select("#stil-select").value());
-kantfarve.setAlpha(alpha * 2);
-p.stroke(kantfarve);
-p.strokeWeight(weight + ringThickness);
-p.beginShape();
-for (const punkt of points) p.vertex(punkt.x, punkt.y);
-p.endShape();
+      // 1) Outline (kun lidt tykkere end overstrok)
+      let kantfarve = p.color(p.select("#stil-select").value());
+      kantfarve.setAlpha(alpha * 2);
+      p.stroke(kantfarve);
+      p.strokeWeight(weight + ringThickness);
+      p.beginShape();
+      for (const punkt of points) p.vertex(punkt.x, punkt.y);
+      p.endShape();
 
-// 3) Over-stroke (din rigtige streg)
-let stregfarve = p.color(
-  (p.hue(bgC) + 180) % 360,
-  p.saturation(bgC),
-  p.brightness(bgC),
-  alpha
-);
-p.stroke(stregfarve);
-p.strokeWeight(weight);
-p.beginShape();
-for (const punkt of points) p.vertex(punkt.x, punkt.y);
-p.endShape();
-    };
-  }
+      // 3) Over-stroke (din rigtige streg)
+      let stregfarve = p.color(
+        (p.hue(bgC) + 180) % 360,
+        p.saturation(bgC),
+        p.brightness(bgC),
+        alpha,
+      );
+      p.stroke(stregfarve);
+      p.strokeWeight(weight);
+      p.beginShape();
+      for (const punkt of points) p.vertex(punkt.x, punkt.y);
+      p.endShape();
+    }
+  };
   // ===========================================================================
   // p.windowResized() — kører automatisk hvis browservinduet ændrer størrelse
   // ===========================================================================
@@ -270,5 +270,68 @@ p.endShape();
     p.randomSeed(666);
     generateCurves();
     p.redraw();
+  };
+
+  //dowloade PNG med SVG-laget ovenpå
+  p.downloadPNG = function (filename) {
+    const svgEl = document.getElementById("Layer_1");
+
+    // Hent font som base64 og embed den i SVG
+    async function getFontBase64(url) {
+      const res = await fetch(url);
+      const buf = await res.arrayBuffer();
+      const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+      return b64;
+    }
+
+    async function render() {
+      const fontB64 = await getFontBase64("/font/SuisseIntl-Regular.otf");
+
+      // Klon SVG og inject font
+      const svgClone = svgEl.cloneNode(true);
+      const defs =
+        svgClone.querySelector("defs") ||
+        svgClone.insertBefore(
+          document.createElementNS("http://www.w3.org/2000/svg", "defs"),
+          svgClone.firstChild,
+        );
+      const style = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "style",
+      );
+      style.textContent = `
+      @font-face {
+        font-family: 'SuisseIntl-Regular';
+        src: url('data:font/woff2;base64,${fontB64}') format('woff2');
+      }
+    `;
+      defs.appendChild(style);
+
+const exportWidth = 2420;
+const exportHeight = 1416;
+
+const exportCanvas = document.createElement("canvas");
+exportCanvas.width = exportWidth;
+exportCanvas.height = exportHeight;
+const ctx = exportCanvas.getContext("2d");
+
+// Skalér p5-canvas'et op til det faste format
+ctx.drawImage(p.canvas, 0, 0, exportWidth, exportHeight);
+
+const svgData = new XMLSerializer().serializeToString(svgClone);
+const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+const url = URL.createObjectURL(svgBlob);
+const img = new Image();
+img.onload = () => {
+  ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
+  URL.revokeObjectURL(url);
+  const a = document.createElement("a");
+  a.download = filename + ".png";
+  a.href = exportCanvas.toDataURL("image/png");
+  a.click();
+};
+img.src = url;
+    }
+    render();
   };
 }

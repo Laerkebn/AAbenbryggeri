@@ -9,8 +9,9 @@ import labelSketch from '../sketches/labelSketch.js';
 
   const mountEl = document.getElementById('p5-mount');
   const mySketch = new p5(labelSketch, mountEl);
-  
+  window.__labelSketch = mySketch; //gør sketch-objektet globalt tilgængeligt
 
+   // Event listeners for sliders
   const ibuSlider = document.getElementById('ctrl-snit');
   ibuSlider.addEventListener('sl-change', (e) => {
     mySketch.opdaterSnit(e.target.value);
