@@ -115,54 +115,54 @@ import Label from '../components/Label.astro';
 
 <!-- eksport png -->
 <script>
-    const input = document.getElementById('oel-navn-input') as HTMLInputElement;
-    // ... al din eksisterende kode ...
-
-    // PNG eksport — tilføj i bunden her
-    const btnPng = document.getElementById("btn-export-png");
-    const exportName = document.getElementById("export-name") as HTMLInputElement;
-
-    btnPng?.addEventListener("click", () => {
-        const s = (window as any).__labelSketch;
-        if (!s?.downloadPNG) return console.warn("downloadPNG ikke fundet");
-        const filename = (exportName?.value || "label").trim().replace(/[^\w\-]+/g, "_");
-        s.downloadPNG(filename);
-    });
-</script>
-
-
-<!-- JavaScript: opdater SVG-teksten når man skriver i inputfeltet -->
-<script>
+  
     const input = document.getElementById('oel-navn-input') as HTMLInputElement;
 
-    input.addEventListener('input', () => {
-        const svgTekst = document.getElementById('svg-oel-navn');
-        if (svgTekst) {
-            svgTekst.querySelector('tspan')!.textContent = input.value || 'Cloud Gazing';
-        }
-    });
+input.addEventListener('input', () => {
+    const svgTekst = document.getElementById('svg-oel-navn');
+    if (svgTekst) {
+        svgTekst.querySelector('tspan')!.textContent = input.value || 'Cloud Gazing';
 
-    // Beskrivelse textarea opdaterer SVG-teksten
-    const beskrivelseInput = document.getElementById('beskrivelse-input') as HTMLTextAreaElement;
-    beskrivelseInput.addEventListener('input', () => {
-        const svgBeskrivelse = document.getElementById('svg-beskrivelse');
-        if (!svgBeskrivelse) return;
+        const maxTegn = 21;
+        const baseFontSize = 17;
+        const minFontSize = 7;
+        const længde = input.value.length;
+        const nyStørrelse = længde > maxTegn
+            ? Math.max(minFontSize, baseFontSize - (længde - maxTegn) * 0.8)
+            : baseFontSize;
+        svgTekst.setAttribute('font-size', nyStørrelse + 'px');
+    }
+});
 
-        const linjer = beskrivelseInput.value
-            ? beskrivelseInput.value.match(/.{1,38}/g) || []
-            : [
-                'Cloud Gazing is a modern West Coast IPA',
-                'boasting a blend of hops that express',
-                'citrus fruits, evergreen forest, and an',
-                'approachable bitterness'
-              ];
+ const beskrivelseInput = document.getElementById('beskrivelse-input') as HTMLTextAreaElement;
+beskrivelseInput.addEventListener('input', () => {
+    const svgBeskrivelse = document.getElementById('svg-beskrivelse');
+    if (!svgBeskrivelse) return;
 
-        // Ryd eksisterende tspans og opbyg nye
-        svgBeskrivelse.innerHTML = linjer
-            .map((linje, i) => `<tspan x="0" dy="${i === 0 ? 0 : 8}">${linje}</tspan>`)
-            .join('');
-    });
+    const linjer = beskrivelseInput.value
+        ? beskrivelseInput.value.match(/.{1,38}/g) || []
+        : [
+            'Cloud Gazing is a modern West Coast IPA',
+            'boasting a blend of hops that express',
+            'citrus fruits, evergreen forest, and an',
+            'approachable bitterness'
+          ];
 
+    svgBeskrivelse.innerHTML = linjer
+        .map((linje, i) => `<tspan x="0" dy="${i === 0 ? 0 : 8}">${linje}</tspan>`)
+        .join('');
+
+    const maxTegn = 172;
+    const baseFontSize = 8;
+    const minFontSize = 4;
+    const længde = beskrivelseInput.value.length;
+    const nyStørrelse = længde > maxTegn
+        ? Math.max(minFontSize, baseFontSize - (længde - maxTegn) * 0.03)
+        : baseFontSize;
+    svgBeskrivelse.setAttribute('font-size', nyStørrelse + 'px');
+
+ 
+});
 
     function opdaterStil(stil: string) {
         // Opdater Å-farve direkte i SVG
@@ -219,6 +219,17 @@ document.querySelectorAll('#linjer path, #linjer polygon, #linjer rect').forEach
     });
 });
     
+
+    // PNG eksport
+    const btnPng = document.getElementById("btn-export-png");
+    const exportName = document.getElementById("export-name") as HTMLInputElement;
+
+    btnPng?.addEventListener("click", () => {
+        const s = (window as any).__labelSketch;
+        if (!s?.downloadPNG) return console.warn("downloadPNG ikke fundet");
+        const filename = (exportName?.value || "label").trim().replace(/[^\w\-]+/g, "_");
+        s.downloadPNG(filename);
+    });
 </script>
 
 
