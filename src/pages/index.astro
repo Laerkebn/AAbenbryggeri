@@ -68,7 +68,7 @@ import Label from '../components/Label.astro';
 
                 <sl-range 
                     id="ctrl-hue" 
-                    label="Hue:" 
+                    label="EBC (Farve):" 
                     min="0" max="150" value="0">
                 </sl-range>
             </div>
@@ -125,12 +125,12 @@ input.addEventListener('input', () => {
 
         const maxTegn = 21;
         const baseFontSize = 17;
-        const minFontSize = 7;
+        const minFontSize = 10;
         const længde = input.value.length;
         const nyStørrelse = længde > maxTegn
             ? Math.max(minFontSize, baseFontSize - (længde - maxTegn) * 0.8)
             : baseFontSize;
-        svgTekst.setAttribute('font-size', nyStørrelse + 'px');
+        (svgTekst as HTMLElement).style.fontSize = nyStørrelse + 'px';
     }
 });
 
@@ -152,7 +152,7 @@ beskrivelseInput.addEventListener('input', () => {
         .map((linje, i) => `<tspan x="0" dy="${i === 0 ? 0 : 8}">${linje}</tspan>`)
         .join('');
 
-    const maxTegn = 172;
+    const maxTegn = 17;
     const baseFontSize = 8;
     const minFontSize = 4;
     const længde = beskrivelseInput.value.length;
