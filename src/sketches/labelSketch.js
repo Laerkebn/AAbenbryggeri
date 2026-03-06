@@ -197,6 +197,12 @@ export default function labelSketch(p) {
       for (const punkt of points) p.vertex(punkt.x, punkt.y);
       p.endShape();
     }
+
+    // Kopier canvas i to dele og switch dem rundt for at få linjertil at line up på fronten
+    let venstre = p.get(0, 0, p.width / 2, p.height);
+    let hoejre = p.get(p.width / 2, 0, p.width / 2, p.height);
+    p.image(hoejre, 0, 0);
+    p.image(venstre, p.width / 2, 0);
   };
   // ===========================================================================
   // p.windowResized() — kører automatisk hvis browservinduet ændrer størrelse
@@ -307,30 +313,32 @@ export default function labelSketch(p) {
     `;
       defs.appendChild(style);
 
-const exportWidth = 2420;
-const exportHeight = 1416;
+      const exportWidth = 2420;
+      const exportHeight = 1416;
 
-const exportCanvas = document.createElement("canvas");
-exportCanvas.width = exportWidth;
-exportCanvas.height = exportHeight;
-const ctx = exportCanvas.getContext("2d");
+      const exportCanvas = document.createElement("canvas");
+      exportCanvas.width = exportWidth;
+      exportCanvas.height = exportHeight;
+      const ctx = exportCanvas.getContext("2d");
 
-// Skalér p5-canvas'et op til det faste format
-ctx.drawImage(p.canvas, 0, 0, exportWidth, exportHeight);
+      // Skalér p5-canvas'et op til det faste format
+      ctx.drawImage(p.canvas, 0, 0, exportWidth, exportHeight);
 
-const svgData = new XMLSerializer().serializeToString(svgClone);
-const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-const url = URL.createObjectURL(svgBlob);
-const img = new Image();
-img.onload = () => {
-  ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
-  URL.revokeObjectURL(url);
-  const a = document.createElement("a");
-  a.download = filename + ".png";
-  a.href = exportCanvas.toDataURL("image/png");
-  a.click();
-};
-img.src = url;
+      const svgData = new XMLSerializer().serializeToString(svgClone);
+      const svgBlob = new Blob([svgData], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
+        URL.revokeObjectURL(url);
+        const a = document.createElement("a");
+        a.download = filename + ".png";
+        a.href = exportCanvas.toDataURL("image/png");
+        a.click();
+      };
+      img.src = url;
     }
     render();
   };
